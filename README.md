@@ -1,2 +1,2 @@
-# lazy<br>
+# lazy
 as the name says,very lazy
