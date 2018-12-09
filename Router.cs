@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Web;
 using System.IO;
 using System.Collections.Generic;
@@ -57,14 +57,16 @@ namespace Router
                     if (routing.modifyDate != Lastest)
                     {
                         routing.handler = hf.GetHandler(context, context.Request.RequestType, url, "");
-                        routing.modifyDate = Lastest;
+                        if (routing.handler.IsReusable)
+                            routing.modifyDate = Lastest;
                     }
 
                     routeAction = getRoutingAction(routing.handler, methodName);
                     routeAction.modifyDate = Lastest;
                     if (routeAction.action == null && routeAction.IsDefAction == false)
                         key = "&&";
-                    cache.AddOrUpdateAction(url, key, routeAction);
+                    if (routing.handler.IsReusable)
+                        cache.AddOrUpdateAction(url, key, routeAction);
                 }
             }
             else
@@ -78,7 +80,8 @@ namespace Router
                 if (routeAction.action == null && routeAction.IsDefAction == false)
                     key = "&&";
                 routing.actions.Add(key, routeAction);
-                cache.AddRouting(url, routing);
+                if(routing.handler.IsReusable)
+                    cache.AddRouting(url, routing);
             }
             _doAction(context, routing.handler, routeAction);
         }
