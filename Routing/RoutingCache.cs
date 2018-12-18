@@ -1,8 +1,7 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Collections.Generic;
 
-namespace RoutingList
+namespace Router.RoutingList
 {
 
     internal class routerTable
@@ -68,6 +67,9 @@ namespace RoutingList
                             result.actionName = action.actionName;
                             result.IsDefAction = action.IsDefAction;
                             result.modifyDate = action.modifyDate;
+                            result.attribute = action.attribute;
+                            result.param = action.param;
+                            result.returnType = action.returnType;
                         }
                         finally
                         {

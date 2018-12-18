@@ -2,9 +2,10 @@
 using System.Web;
 using System.Reflection;
 using System.Collections.Generic;
+using Router.Attributes;
 
 
-namespace RoutingList
+namespace Router.RoutingList
 {
     internal class Routing
     {
@@ -17,7 +18,10 @@ namespace RoutingList
     {
         public MethodInfo action { get; set; }
         public string actionName { get; set; }
-        public bool IsDefAction { get; set; }
         public DateTime modifyDate { get; set; }
+        public RoutingMethodAttribute attribute { get; set; }
+        public ParameterInfo[] param { get; set; }
+        public bool IsDefAction { get; set; }
+        public ParameterInfo returnType { get; set; }
     }
 }
