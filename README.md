@@ -1,5 +1,29 @@
 ### Router 
-`a HttpModule`  
+`a HttpModule` 
+
+---
+`v0.11`  
+new:  
+加入了RoutingMethod特性,实现直接传递参数到方法  
+**eg.**
+```C#
+...
+[RoutingMethod]
+public string getPeople(string id){
+  ...
+}
+
+[RoutringMethod(UseHttpGet=false)]
+public void setPeople(People p){
+  ...
+}
+```
+*the Http request like following:  
+getPeople: /....xx.router?action=getPeople&id=123  
+setPeople: /....xx.router?action=setPeople,FormData:{p:"{"id":123,"name":"test"}"}*
+
+---
+`v0.1`
 >经常写.ashx,每天都是switch case,于是就有了Router,用法如下:  
 1. 引用Router.dll  
 2. web.config中添加httpModules  
