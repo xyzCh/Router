@@ -91,6 +91,15 @@ namespace Router
                     context.Response.ContentType = "text/json";
                 else
                     context.Response.ContentType = "text/plain";
+                
+                if (result.GetType().Name == "String")
+                {
+                    try
+                    {
+                        result = j.Deserialize<object>((string)result);
+                    }
+                    catch (Exception e){}
+                }
                 context.Response.Write(j.Serialize(new { result }));
             }
         }
