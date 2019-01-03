@@ -1,12 +1,27 @@
 ### Router 
-`a HttpModule` 
+`a HttpModule`
 
 ---
+`2019/1/3 update`  `session support`  
+asp.NET在PostResolveRequestCache之后的AcquireRequestState事件中才获取当前请求的session，但router在PostResolveRequestCache事件中拦截请求进行处理，跳过了后边事件的执行，因此在用户代码中使用session时会出现问题。本着不大量改动现有用户代码又可以使用session,另一方面由于技术和精力有限,作出以下更新（应该有更好的办法）:    
++ router的实现中，由原来的PostResolveRequestCache事件中直接拦截然请求后进行反射处理改为:在PostResolveRequestCache事件中拦截请求，最后调用HttpContext.RemapHandler(ForwardHttpHandler)，利用自定义的ForWardHttpHandler做跳转，最终在ForWardHttpHandler中进行请求的处理。
++ web.config中重新加载Session模块(用户代码要做出的改变)
+  ```html
+  <modules>
+    ...
+    <add name="*" type="Router.FilterModule" />
+    <remove name="Session"/>
+    <add name="Session" type="System.Web.SessionState.SessionStateModule"/> <!--add-->
+  </modules>
+  ```
+
+-----
 `v0.11`  
 new:  
 加入了RoutingMethod特性,实现直接传递参数到方法  
 **eg.**
 ```C#
+using Routing.Attributes;
 ...
 [RoutingMethod]
 public string getPeople(string id){
