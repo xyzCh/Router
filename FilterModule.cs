@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web;
+using System.Web.SessionState;
 
 namespace Router
 {
@@ -24,15 +25,29 @@ namespace Router
 
             if (path_section[path_section.Length - 1].IndexOf('.') > 0 && Ext.ToUpper() == ".ROUTER")
             {
-                string[] file_section = path_section[path_section.Length - 1].Split('.');
-                file_section.SetValue(file_section[file_section.Length - 1].ToUpper().Replace("ROUTER", "ashx"), file_section.Length - 1);
-                string file = string.Join(".", file_section);
-                path_section.SetValue(file, path_section.Length - 1);
-                string realPath = string.Join("/", path_section);
-                Router.doAction(context, realPath);
+                context.RemapHandler(new ForwarHandler());
             }
             else
                 context.RemapHandler(context.CurrentHandler);
+        }
+    }
+
+    internal sealed class ForwarHandler : IHttpHandler,IRequiresSessionState{
+
+        public bool IsReusable
+        {
+            get { return false; }
+        }
+
+        public void ProcessRequest(HttpContext context)
+        {
+            string[] path_section = context.Request.Path.Split('/');
+            string[] file_section = path_section[path_section.Length - 1].Split('.');
+            file_section.SetValue(file_section[file_section.Length - 1].ToUpper().Replace("ROUTER", "ashx"), file_section.Length - 1);
+            string file = string.Join(".", file_section);
+            path_section.SetValue(file, path_section.Length - 1);
+            string realPath = string.Join("/", path_section);
+            Router.doAction(context, realPath);
         }
     }
 }

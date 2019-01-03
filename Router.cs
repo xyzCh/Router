@@ -91,7 +91,7 @@ namespace Router
                     context.Response.ContentType = "text/json";
                 else
                     context.Response.ContentType = "text/plain";
-                
+
                 if (result.GetType().Name == "String")
                 {
                     try
@@ -168,7 +168,7 @@ namespace Router
                     }
                     else
                         if (param.Length != 1 || (param.Length == 1 && !param[0].ParameterType.Equals(context.GetType())))
-                            throw new HttpException(500, "访问未添加RoutingMethod特性的方法时，请确认方法只有一个HttpContext类型参数，当方法有多个参数时请对方法标记RoutingMethod特性。");
+                            throw new HttpException(500, "访问未标记RoutingMethod特性的方法时请确认方法只有一个HttpContext类型参数，否则请对方法标记RoutingMethod特性。");
                 }
                 else
                 {
