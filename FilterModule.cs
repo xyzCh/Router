@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Web;
 using System.Web.SessionState;
 
@@ -15,7 +15,9 @@ namespace Router
         public void Init(HttpApplication context)
         {
             context.PostResolveRequestCache += new EventHandler(this.onPostResolveRequestCache);
+            context.AcquireRequestState += RouterFilter.Filter._AcquireRequestState;
         }
+
         private void onPostResolveRequestCache(Object sender, EventArgs s)
         {
             HttpApplication app = (HttpApplication)sender;
@@ -25,14 +27,14 @@ namespace Router
 
             if (path_section[path_section.Length - 1].IndexOf('.') > 0 && Ext.ToUpper() == ".ROUTER")
             {
-                context.RemapHandler(new ForwarHandler());
+                context.RemapHandler(new ForwardHandler());
             }
             else
                 context.RemapHandler(context.CurrentHandler);
         }
     }
 
-    internal sealed class ForwarHandler : IHttpHandler,IRequiresSessionState{
+    internal sealed class ForwardHandler : IHttpHandler,IReadOnlySessionState{
 
         public bool IsReusable
         {
