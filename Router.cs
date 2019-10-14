@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Web;
 using System.IO;
 using System.Collections.Generic;
@@ -92,7 +92,7 @@ namespace Router
                 else
                     context.Response.ContentType = "text/plain";
 
-                if (result.GetType().Name == "String")
+                if (result!=null && result.GetType().Equals(typeof(string)))
                 {
                     try
                     {
@@ -100,7 +100,8 @@ namespace Router
                     }
                     catch (Exception e){}
                 }
-                context.Response.Write(j.Serialize(new { result }));
+                if (!routeAction.returnType.ParameterType.Equals(typeof(void)))
+                    context.Response.Write(j.Serialize(new { result }));
             }
         }
 
